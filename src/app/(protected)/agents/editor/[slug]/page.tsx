@@ -19,6 +19,10 @@ import {
   Webhook,
   Edit,
   Sparkles,
+  Maximize2,
+  Minimize2,
+  Menu,
+  X,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
@@ -53,7 +57,7 @@ import type { User } from '@supabase/supabase-js';
 import type { Agent, WorkflowSpec } from '@/types/agent';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AgentEditorTestingTab } from '@/components/agent-editor-testing-tab';
-import { AuthDiagnostic } from '@/components/auth-diagnostic';
+import { EditWorkflowPanel } from '@/components/edit-workflow-panel';
 
 
 let nodeIdCounter = 0;
@@ -87,6 +91,8 @@ function AgentWorkflowEditor() {
 
   const [isLoading, setIsLoading] = useState(!isNewAgent);
   const [user, setUser] = useState<User | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const { toast } = useToast();
   const reactFlowInstance = useReactFlow();
@@ -104,13 +110,23 @@ function AgentWorkflowEditor() {
   const updateCanvas = useCallback((workflowSpec: WorkflowSpec) => {
     // This function is the single source of truth for updating the UI with a new workflow spec.
     // It updates the currentWorkflow state, the overall agent state, and the ReactFlow nodes/edges.
+    console.log('updateCanvas called with:', workflowSpec);
+    
     setCurrentWorkflow(workflowSpec);
     setAgent(prev => ({
       ...prev,
       spec: workflowSpec,
     }));
   
-    if (!workflowSpec || !workflowSpec.trigger) {
+    if (!workflowSpec) {
+      console.log('No workflow spec provided');
+      setNodes([]);
+      setEdges([]);
+      return;
+    }
+    
+    if (!workflowSpec.trigger) {
+      console.log('No trigger found in workflow spec');
       setNodes([]);
       setEdges([]);
       return;
@@ -148,6 +164,9 @@ function AgentWorkflowEditor() {
       }
     }
   
+    console.log('Setting nodes:', allNodes);
+    console.log('Setting edges:', newEdges);
+    
     setNodes(allNodes);
     setEdges(newEdges);
   
@@ -167,34 +186,113 @@ function AgentWorkflowEditor() {
     } else {
       const fetchWorkflow = async () => {
         const supabase = getSupabaseBrowserClient();
+        
+        console.log('Editor: Attempting to load workflow with ID:', slug);
+        
+        // First try to find workflow with this ID
         const { data, error } = await supabase
           .from('workflows')
-          .select('config, description') // Use 'config' instead of 'spec'
+          .select('workflow_id, config, description, name') 
           .eq('workflow_id', slug)
           .single();
 
         if (error || !data) {
+          console.log('Workflow not found with ID:', slug);
+          console.log('Error:', error);
+          
+          // Check if this might be a deployment_id or agent_id
+          const { data: deploymentData } = await supabase
+            .from('deployments')
+            .select('deployment_id, agent_id')
+            .eq('deployment_id', slug)
+            .single();
+            
+          if (deploymentData) {
+            console.log('Found deployment with this ID:', deploymentData);
+            
+            // Get the agent and its workflow
+            const { data: agentData } = await supabase
+              .from('agents')
+              .select('agent_id, workflow_id')
+              .eq('agent_id', deploymentData.agent_id)
+              .single();
+              
+            if (agentData?.workflow_id) {
+              console.log('Found workflow_id via agent:', agentData.workflow_id);
+              // Redirect to the correct workflow_id
+              router.replace(`/agents/editor/${agentData.workflow_id}`);
+              return;
+            }
+          }
+          
+          // Check if this might be an agent_id directly
+          const { data: agentData } = await supabase
+            .from('agents')
+            .select('agent_id, workflow_id')
+            .eq('agent_id', slug)
+            .single();
+            
+          if (agentData?.workflow_id) {
+            console.log('Found workflow_id via direct agent lookup:', agentData.workflow_id);
+            // Redirect to the correct workflow_id
+            router.replace(`/agents/editor/${agentData.workflow_id}`);
+            return;
+          }
+          
           toast({
             variant: "destructive",
-            title: "Error loading workflow",
-            description: error?.message || "Could not find the requested workflow.",
+            title: "Workflow not found",
+            description: `Could not find workflow with ID: ${slug}. This might be a deployment ID or agent ID instead of a workflow ID.`,
           });
           router.push('/my-agents');
           return;
         }
         
+        console.log('Workflow found successfully:', data);
+        console.log('Raw config data:', data.config);
+        
         // The config column is the source of truth
-        const fetchedSpec = data.config as WorkflowSpec;
-
-        // Ensure spec has name and description, using fallbacks if necessary.
-        if (!fetchedSpec.name) {
-           fetchedSpec.name = data.description || "Untitled Agent";
+        let fetchedSpec = data.config as WorkflowSpec;
+        
+        // If config is null or empty, create a default workflow structure
+        if (!fetchedSpec || typeof fetchedSpec !== 'object') {
+          console.log('Config is null/empty, creating default workflow structure');
+          fetchedSpec = {
+            name: data.name || data.description || "Untitled Agent",
+            description: data.description || "No description provided.",
+            trigger: {
+              label: "Manual Trigger",
+              description: "Starts when manually run."
+            },
+            steps: []
+          };
+        } else {
+          // Ensure spec has name and description, using fallbacks if necessary.
+          if (!fetchedSpec.name) {
+             fetchedSpec.name = data.name || data.description || "Untitled Agent";
+          }
+          if (!fetchedSpec.description) {
+             fetchedSpec.description = data.description || "No description provided.";
+          }
+          
+          // Ensure spec has required workflow structure
+          if (!fetchedSpec.trigger) {
+            fetchedSpec.trigger = {
+              label: "Manual Trigger",
+              description: "Starts when manually run."
+            };
+          }
+          if (!fetchedSpec.steps) {
+            fetchedSpec.steps = [];
+          }
         }
-        if (!fetchedSpec.description) {
-           fetchedSpec.description = "No description provided.";
-        }
+        
+        console.log('Processed workflow spec:', fetchedSpec);
 
 
+        // Set the workflow ID to enable saving
+        setWorkflowId(slug);
+        
         setAgent(prev => ({
           ...prev,
           behavior: 'You are a helpful assistant.', // This could also be stored in the DB in the future
@@ -310,38 +408,97 @@ function AgentWorkflowEditor() {
   }
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex items-center justify-between border-b p-4 flex-shrink-0 bg-background">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" asChild>
+    <div className={`flex flex-col h-full overflow-hidden ${isFullscreen ? 'fixed inset-0 z-50 bg-background' : ''}`}>
+      <div className="flex items-center justify-between border-b p-2 md:p-4 flex-shrink-0 bg-background editor-header">
+        <div className="flex items-center gap-2 md:gap-4">
+          <Button variant="ghost" size="sm" asChild className="md:size-default">
             <Link href="/my-agents">
-              <ArrowLeft />
+              <ArrowLeft className="h-4 w-4" />
               <span className="sr-only">Back to My Agents</span>
             </Link>
           </Button>
-          <h1 className="text-xl font-bold font-headline">{agent.spec?.name || 'Unnamed Agent'}</h1>
+          {!isFullscreen && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="md:hidden" 
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            >
+              {isSidebarOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </Button>
+          )}
+          <h1 className="text-lg md:text-xl font-bold font-headline truncate max-w-[200px] md:max-w-none">
+            {agent.spec?.name || 'Unnamed Agent'}
+          </h1>
         </div>
-        <div className="flex items-center gap-2">
-            <NewWorkflowDialog onWorkflowGenerated={onWorkflowGenerated} userId={user?.id} />
-             <Button variant="outline" onClick={onDelete}>
-                <Trash2 className="mr-2" />
-                Delete
+        <div className="flex items-center gap-1 md:gap-2">
+            <div className="hidden md:block">
+              <NewWorkflowDialog onWorkflowGenerated={onWorkflowGenerated} userId={user?.id} />
+            </div>
+            <Button variant="outline" size="sm" className="hidden sm:flex md:size-default" onClick={onDelete}>
+                <Trash2 className="mr-1 md:mr-2 h-4 w-4" />
+                <span className="hidden sm:inline">Delete</span>
             </Button>
-            <Button onClick={onSave}>
-                <Save className="mr-2" />
-                Save
+            <Button size="sm" className="md:size-default" onClick={onSave} data-tutorial="save-btn">
+                <Save className="mr-1 md:mr-2 h-4 w-4" />
+                <span className="hidden sm:inline">Save</span>
             </Button>
-            <Button variant="outline" asChild>
+            <Button variant="outline" size="sm" className="hidden sm:flex md:size-default" asChild>
                 <Link href="/deployments">
-                  <Rocket className="mr-2" />
-                  Deploy
+                  <Rocket className="mr-1 md:mr-2 h-4 w-4" />
+                  <span className="hidden sm:inline">Deploy</span>
                 </Link>
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="md:size-default" 
+              onClick={() => setIsFullscreen(!isFullscreen)}
+              data-tutorial="fullscreen-btn"
+            >
+              {isFullscreen ? (
+                <>
+                  <Minimize2 className="mr-1 md:mr-2 h-4 w-4" />
+                  <span className="hidden sm:inline">Exit Fullscreen</span>
+                </>
+              ) : (
+                <>
+                  <Maximize2 className="mr-1 md:mr-2 h-4 w-4" />
+                  <span className="hidden sm:inline">Fullscreen</span>
+                </>
+              )}
             </Button>
         </div>
       </div>
       <div className="flex flex-1 overflow-auto">
-        <aside className="w-80 border-r p-4 space-y-4 overflow-y-auto flex-shrink-0">
-            <h2 className="text-lg font-semibold">Blocks</h2>
+        {/* Mobile Sidebar Overlay */}
+        {isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" 
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+        
+        <aside className={`
+          w-80 border-r p-4 space-y-4 overflow-y-auto flex-shrink-0
+          md:block
+          ${isFullscreen ? 'hidden' : ''}
+          ${isSidebarOpen && !isFullscreen
+            ? 'fixed left-0 top-0 h-full bg-background z-50 block shadow-lg' 
+            : !isFullscreen ? 'hidden md:block' : 'hidden'
+          }
+        `} data-tutorial="blocks-sidebar">
+            <div className="flex items-center justify-between md:block">
+              <h2 className="text-lg font-semibold">Blocks</h2>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="md:hidden" 
+                onClick={() => setIsSidebarOpen(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
             <div className="space-y-1">
                 <p className="text-sm font-medium text-muted-foreground px-2">Triggers</p>
                 <Button variant="outline" className="w-full justify-start" onClick={() => onAddNode('Trigger', 'WhatsApp Trigger')}>
@@ -388,25 +545,29 @@ function AgentWorkflowEditor() {
         </aside>
         <main className="flex-1 relative">
           <Tabs defaultValue="editor" className="h-full flex flex-col">
-            <div className="px-4 pt-2 border-b border-gray-200 dark:border-gray-700">
-              <TabsList className="mb-2">
-                <TabsTrigger value="editor">
-                  <Edit className="h-4 w-4 mr-2" />
-                  Editor
+            <div className="px-2 md:px-4 pt-2 border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
+              <TabsList className="mb-2 w-full md:w-auto">
+                <TabsTrigger value="editor" className="flex-1 md:flex-none text-xs md:text-sm">
+                  <Edit className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                  <span className="hidden sm:inline">Editor</span>
                 </TabsTrigger>
-                <TabsTrigger value="testing">
-                  <Bot className="h-4 w-4 mr-2" />
-                  Testing
-                </TabsTrigger>
-                <TabsTrigger value="debug">
-                  🔍 Debug
+                <TabsTrigger value="testing" className="flex-1 md:flex-none text-xs md:text-sm" data-tutorial="testing-tab">
+                  <Bot className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                  <span className="hidden sm:inline">Testing</span>
                 </TabsTrigger>
               </TabsList>
             </div>
             
             <TabsContent value="editor" className="flex-1 m-0">
 
-           {isNewAgent && nodes.length === 0 ? (
+           {(() => {
+             console.log('Render condition check:', {
+               isNewAgent,
+               nodesLength: nodes.length,
+               showNewAgent: isNewAgent && nodes.length === 0
+             });
+             
+             return isNewAgent && nodes.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center">
                     <div className="max-w-md p-8">
                         <Bot className="w-20 h-20 mx-auto text-muted-foreground" />
@@ -420,19 +581,43 @@ function AgentWorkflowEditor() {
                     </div>
                 </div>
            ) : (
-             <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-                fitView
-                deleteKeyCode={['Backspace', 'Delete']}
-                >
+             <div data-tutorial="editor-canvas" style={{ height: '100%', width: '100%', position: 'relative' }}>
+               {console.log('Rendering ReactFlow with:', { nodes, edges })}
+               
+               {/* Debug info overlay */}
+               <div style={{
+                 position: 'absolute',
+                 top: 10,
+                 left: 10,
+                 background: 'rgba(0,0,0,0.8)',
+                 color: 'white',
+                 padding: '10px',
+                 borderRadius: '5px',
+                 fontSize: '12px',
+                 zIndex: 1000,
+                 pointerEvents: 'none'
+               }}>
+                 <div>Nodes: {nodes.length}</div>
+                 <div>Edges: {edges.length}</div>
+                 <div>Workflow: {currentWorkflow ? 'Loaded' : 'None'}</div>
+                 <div>IsNewAgent: {isNewAgent.toString()}</div>
+               </div>
+               
+               <ReactFlow
+                  nodes={nodes}
+                  edges={edges}
+                  onNodesChange={onNodesChange}
+                  onEdgesChange={onEdgesChange}
+                  onConnect={onConnect}
+                  fitView
+                  deleteKeyCode={['Backspace', 'Delete']}
+                  >
                 <Background />
                 <Controls />
-             </ReactFlow>
-           )}
+               </ReactFlow>
+             </div>
+           );
+           })()}
             </TabsContent>
             
             <TabsContent value="testing" className="flex-1 m-0">
@@ -455,13 +640,10 @@ function AgentWorkflowEditor() {
               )}
             </TabsContent>
             
-            <TabsContent value="debug" className="flex-1 m-0 p-4">
-              <AuthDiagnostic />
-            </TabsContent>
           </Tabs>
         </main>
-        {currentWorkflow && workflowId && (
-            <aside className="w-80 border-l p-4 space-y-4 overflow-y-auto flex-shrink-0">
+        {currentWorkflow && workflowId && !isFullscreen && (
+            <aside className="w-80 border-l p-4 space-y-4 overflow-y-auto flex-shrink-0 hidden lg:block">
                 <EditWorkflowPanel 
                     workflowId={workflowId}
                     currentWorkflow={currentWorkflow}
@@ -469,6 +651,34 @@ function AgentWorkflowEditor() {
                     userId={user?.id}
                 />
             </aside>
+        )}
+        
+        {/* Mobile Floating Action Button for Workflow Generation */}
+        {!isFullscreen && (
+          <div className="md:hidden fixed bottom-4 right-4 z-40">
+            <NewWorkflowDialog onWorkflowGenerated={onWorkflowGenerated} userId={user?.id} />
+          </div>
+        )}
+        
+        {/* Mobile Edit Workflow Panel */}
+        {currentWorkflow && workflowId && !isFullscreen && (
+          <div className="lg:hidden fixed bottom-16 right-4 z-40">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="bg-background shadow-lg"
+              onClick={() => {
+                // You could open a modal here for mobile workflow editing
+                // For now, we'll just show a toast
+                toast({
+                  title: "Edit on Desktop",
+                  description: "Workflow editing is optimized for desktop. Please use a larger screen for the best experience.",
+                });
+              }}
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+          </div>
         )}
       </div>
     </div>

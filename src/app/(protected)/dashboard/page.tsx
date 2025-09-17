@@ -102,7 +102,7 @@ export default function DashboardPage() {
       if (workflowIds.length > 0) {
         const { data: agentsData } = await supabase
           .from('agents')
-          .select('agent_id, workflow_id, name, platform, status, created_at')
+          .select('agent_id, workflow_id, name, description, model, config, created_at')
           .in('workflow_id', workflowIds);
         agents = agentsData || [];
       }
@@ -114,7 +114,7 @@ export default function DashboardPage() {
       if (agentIds.length > 0) {
         const { data: deploymentsData } = await supabase
           .from('deployments')
-          .select('deployment_id, agent_id, status, created_at')
+          .select('deployment_id, agent_id, environment, status, url, created_at')
           .in('agent_id', agentIds);
         deployments = deploymentsData || [];
       }
@@ -159,24 +159,26 @@ export default function DashboardPage() {
       // Add deployment activities
       deployments.slice(0, 3).forEach(deployment => {
         const agent = agents.find(a => a.agent_id === deployment.agent_id);
+        const platform = agent?.config?.platform || agent?.config?.deployment_type || 'API Webhook';
         activities.push({
           id: deployment.deployment_id,
           type: 'deployment',
           agentName: agent?.name || 'Unknown Agent',
-          platform: agent?.platform || 'Unknown',
-          status: deployment.status === 'deployed' ? 'success' : deployment.status === 'failed' ? 'error' : 'pending',
+          platform: platform,
+          status: deployment.status === 'active' ? 'success' : deployment.status === 'inactive' ? 'error' : 'pending',
           timestamp: deployment.created_at,
-          details: `Deployed to ${agent?.platform || 'platform'}`
+          details: `Deployed to ${deployment.environment || 'production'} environment`
         });
       });
 
       // Add recent agent creation activities
       agents.slice(0, 2).forEach(agent => {
+        const platform = agent?.config?.platform || agent?.config?.deployment_type || 'API Webhook';
         activities.push({
           id: agent.agent_id,
           type: 'agent_created',
           agentName: agent.name,
-          platform: agent.platform,
+          platform: platform,
           status: 'success',
           timestamp: agent.created_at,
           details: 'Agent created successfully'
@@ -311,12 +313,14 @@ export default function DashboardPage() {
                   View Deployments
                 </Link>
               </Button>
-              <Button asChild className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
-                <Link href="/agents/editor/new">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create Agent
-                </Link>
-              </Button>
+              <div data-tutorial="create-agent-btn">
+                <Button asChild className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
+                  <Link href="/agents/editor/new">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create Agent
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -345,7 +349,7 @@ export default function DashboardPage() {
         )}
 
         {/* Stats Overview */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8" data-tutorial="stats-overview">
           <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-950/50 dark:to-blue-900/30 shadow-lg hover:shadow-xl transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-blue-700 dark:text-blue-300">Total Agents</CardTitle>
@@ -450,7 +454,9 @@ export default function DashboardPage() {
             </Card>
 
             {/* Performance Overview */}
-            <RealTimePerformance />
+            <div data-tutorial="performance-section">
+              <RealTimePerformance />
+            </div>
             
           </div>
 
@@ -466,7 +472,7 @@ export default function DashboardPage() {
         {/* Bottom Section - Charts and Activity */}
         <div className="grid gap-8 lg:grid-cols-2 mt-12">
           {/* Activity Overview Chart */}
-          <Card className="border-0 shadow-lg bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-950/30 dark:to-purple-950/30">
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-950/30 dark:to-purple-950/30" data-tutorial="activity-chart">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-indigo-900 dark:text-indigo-100">
                 <TrendingUp className="h-5 w-5 text-indigo-600" />
@@ -523,7 +529,7 @@ export default function DashboardPage() {
           </Card>
           
           {/* Recent Activity */}
-          <Card className="border-0 shadow-lg bg-gradient-to-br from-rose-50/50 to-pink-50/50 dark:from-rose-950/30 dark:to-pink-950/30">
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-rose-50/50 to-pink-50/50 dark:from-rose-950/30 dark:to-pink-950/30" data-tutorial="recent-activity">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-rose-900 dark:text-rose-100">
                 <Activity className="h-5 w-5 text-rose-600" />

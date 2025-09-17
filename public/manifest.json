@@ -1,0 +1,32 @@
+{
+  "name": "KYNEX.dev - AI Agent Development Platform",
+  "short_name": "KYNEX.dev",
+  "description": "Create and deploy AI agents with ease using KYNEX.dev",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#3d4148",
+  "theme_color": "#75f9f1",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "developer", "business"],
+  "lang": "en",
+  "dir": "ltr"
+}

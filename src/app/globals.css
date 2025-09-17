@@ -81,6 +81,32 @@
   html, body, #__next {
     @apply h-full;
   }
+  
+  /* Prevent zoom on mobile when clicking inputs/buttons */
+  input[type="text"],
+  input[type="email"], 
+  input[type="password"],
+  input[type="search"],
+  textarea,
+  button,
+  select {
+    font-size: 16px !important;
+  }
+  
+  /* Improve mobile touch targets */
+  button,
+  [role="button"],
+  input[type="submit"],
+  input[type="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent horizontal scroll on mobile */
+  html, body {
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
 }
 
 .loader {
@@ -113,4 +139,36 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ReactFlow mobile responsiveness */
+@media (max-width: 768px) {
+  .react-flow__controls {
+    bottom: 80px !important;
+  }
+  
+  .react-flow__panel {
+    margin: 10px !important;
+  }
+  
+  .react-flow__node {
+    font-size: 12px !important;
+  }
+  
+  .react-flow__minimap {
+    display: none !important;
+  }
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  .react-flow__controls-button {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+  }
+  
+  .react-flow__attribution {
+    display: none !important;
+  }
 }

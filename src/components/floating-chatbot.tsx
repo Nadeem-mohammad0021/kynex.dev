@@ -14,7 +14,7 @@ export function FloatingChatbot({ className }: FloatingChatbotProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className={cn("fixed bottom-6 right-6 z-50", className)}>
+    <div className={cn("fixed bottom-4 right-4 z-50", className)}>
       {isOpen ? (
         <div className="relative">
           <div className="absolute bottom-16 right-0 w-96 max-w-[calc(100vw-3rem)] max-h-[calc(100vh-8rem)] sm:max-w-[90vw]">

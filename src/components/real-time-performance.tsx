@@ -129,7 +129,9 @@ export function RealTimePerformance() {
               agent_id,
               workflow_id,
               name,
+              description,
               model,
+              config,
               created_at
             `)
             .in('workflow_id', workflowIds);
@@ -171,10 +173,13 @@ export function RealTimePerformance() {
           const agentLogs = recentLogs?.filter(log => log.agent_id === agent.agent_id) || [];
           const workflow = workflows?.find(w => w.workflow_id === agent.workflow_id);
           
+          // Get platform from agent config, similar to deployments page
+          const platform = agent?.config?.platform || agent?.config?.deployment_type || 'API Webhook';
+          
           return {
             agentId: agent.agent_id,
             name: agent.name || workflow?.name || 'Unnamed Agent',
-            platform: agent.model || 'Unknown Model',
+            platform: platform,
             status: 'active', // Default to active since status is not in the new schema
             conversations: agentLogs.length,
             activeConversations: agentLogs.filter(log => 
@@ -192,10 +197,13 @@ export function RealTimePerformance() {
           const workflow = workflows?.find(w => w.workflow_id === agent?.workflow_id);
           const timeDiff = Date.now() - new Date(log.created_at).getTime();
           
+          // Get platform from agent config, similar to deployments page
+          const platform = agent?.config?.platform || agent?.config?.deployment_type || 'API Webhook';
+          
           return {
             conversationId: log.log_id,
             agentName: agent?.name || workflow?.name || 'Unknown Agent',
-            platform: agent?.model || 'Unknown Model',
+            platform: platform,
             status: log.level === 'info' ? 'completed' : 'error',
             messageCount: 1, // Each log represents one message/interaction
             satisfactionScore: log.status === 'success' ? (4 + Math.random()) : null,

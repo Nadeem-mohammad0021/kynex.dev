@@ -1,10 +1,20 @@
 
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Toaster as SonnerToaster } from 'sonner';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
+import { TutorialProvider } from '@/components/tutorial/tutorial-provider';
+import { WelcomeDialog } from '@/components/tutorial/welcome-dialog';
 import { inter, spaceGrotesk, sourceCodePro } from './fonts';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover'
+};
 
 export const metadata: Metadata = {
   title: 'KYNEX.dev - AI Agent Development Platform',
@@ -19,13 +29,18 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
+      { url: '/favicon.ico', sizes: '16x16 32x32', type: 'image/x-icon' },
       { url: '/images/logo.png', sizes: '192x192', type: 'image/png' },
       { url: '/images/logo.png', sizes: '512x512', type: 'image/png' },
     ],
-    apple: [{ url: '/images/logo.png', sizes: '180x180', type: 'image/png' }],
-    shortcut: '/images/logo.png',
+    apple: [
+      { url: '/images/logo.png', sizes: '180x180', type: 'image/png' },
+      { url: '/images/logo.png', sizes: '152x152', type: 'image/png' },
+      { url: '/images/logo.png', sizes: '120x120', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
   },
+  manifest: '/manifest.json',
   openGraph: {
     title: 'KYNEX.dev - AI Agent Development Platform',
     description: 'Create and deploy AI agents with ease using KYNEX.dev - The ultimate platform for AI agent development.',
@@ -68,7 +83,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <TutorialProvider>
+            {children}
+            <WelcomeDialog />
+          </TutorialProvider>
         </ThemeProvider>
         <Toaster />
         <SonnerToaster />

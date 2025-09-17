@@ -84,6 +84,7 @@ export function UniversalDeployDialog({ workflows, onSuccess }: UniversalDeployD
   const [credentials, setCredentials] = useState<Record<string, string>>({});
   const [isDeploying, setIsDeploying] = useState(false);
   const [deploymentResult, setDeploymentResult] = useState<any>(null);
+  const [currentTab, setCurrentTab] = useState('select');
   const { toast } = useToast();
 
   const selectedConfig = selectedPlatform ? platformConfigs[selectedPlatform as keyof typeof platformConfigs] : null;
@@ -512,6 +513,7 @@ fetch('https://kynex.dev/api/agents/${deploymentId}/message', {
     setSelectedPlatform('');
     setCredentials({});
     setDeploymentResult(null);
+    setCurrentTab('select');
   };
 
   return (
@@ -527,16 +529,16 @@ fetch('https://kynex.dev/api/agents/${deploymentId}/message', {
           Deploy Agent
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto mx-4 sm:mx-auto">
         <DialogHeader>
-          <DialogTitle>Deploy Agent to Any Platform</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-lg sm:text-xl">Deploy Agent to Any Platform</DialogTitle>
+          <DialogDescription className="text-sm sm:text-base">
             Choose your agent and platform, then preview the integration code and setup instructions before deployment.
           </DialogDescription>
         </DialogHeader>
 
         {!deploymentResult ? (
-          <Tabs defaultValue="select" className="space-y-4">
+          <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-4">
             <TabsList>
               <TabsTrigger value="select">1. Choose Agent & Platform</TabsTrigger>
               <TabsTrigger value="configure" disabled={!selectedWorkflow || !selectedPlatform}>2. Preview Integration</TabsTrigger>
@@ -584,8 +586,8 @@ fetch('https://kynex.dev/api/agents/${deploymentId}/message', {
                 </div>
 
                 <div>
-                  <Label>Select Deployment Platform</Label>
-                  <div className="grid grid-cols-2 gap-3 mt-2">
+                  <Label className="text-sm sm:text-base">Select Deployment Platform</Label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
                     {Object.entries(platformConfigs).map(([platform, config]) => {
                       const Icon = config.icon;
                       const isSelected = selectedPlatform === platform;
@@ -598,12 +600,12 @@ fetch('https://kynex.dev/api/agents/${deploymentId}/message', {
                           }`}
                           onClick={() => setSelectedPlatform(platform)}
                         >
-                          <CardContent className="p-4">
-                            <div className="flex items-center space-x-3">
-                              <div className={`p-2 rounded-md ${config.color} text-white`}>
-                                <Icon className="h-4 w-4" />
+                          <CardContent className="p-3 sm:p-4">
+                            <div className="flex items-center space-x-2 sm:space-x-3">
+                              <div className={`p-1.5 sm:p-2 rounded-md ${config.color} text-white flex-shrink-0`}>
+                                <Icon className="h-3 w-3 sm:h-4 sm:w-4" />
                               </div>
-                              <span className="font-medium text-sm">{platform}</span>
+                              <span className="font-medium text-xs sm:text-sm truncate">{platform}</span>
                             </div>
                           </CardContent>
                         </Card>
@@ -661,11 +663,11 @@ fetch('https://kynex.dev/api/agents/${deploymentId}/message', {
         ) : (
           <div className="space-y-4">
             <div className="text-center">
-              <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                <Rocket className="h-6 w-6 text-green-600" />
+              <div className="mx-auto w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                <Rocket className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" />
               </div>
-              <h3 className="text-lg font-semibold">Deployment Successful!</h3>
-              <p className="text-muted-foreground">Your agent is now live on {selectedPlatform}</p>
+              <h3 className="text-base sm:text-lg font-semibold">Deployment Successful!</h3>
+              <p className="text-sm sm:text-base text-muted-foreground">Your agent is now live on {selectedPlatform}</p>
             </div>
 
             <Card>
@@ -776,12 +778,29 @@ fetch('https://kynex.dev/api/agents/${deploymentId}/message', {
               <Button variant="outline" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
-              <Button 
-                onClick={handleDeploy}
-                disabled={!selectedWorkflow || !selectedPlatform || isDeploying}
-              >
-                {isDeploying ? 'Deploying...' : 'Deploy Agent'}
-              </Button>
+              {currentTab === 'select' ? (
+                <Button 
+                  disabled={!selectedWorkflow || !selectedPlatform}
+                  onClick={() => setCurrentTab('configure')}
+                >
+                  Next
+                </Button>
+              ) : (
+                <>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setCurrentTab('select')}
+                  >
+                    Back
+                  </Button>
+                  <Button 
+                    onClick={handleDeploy}
+                    disabled={!selectedWorkflow || !selectedPlatform || isDeploying}
+                  >
+                    {isDeploying ? 'Deploying...' : 'Deploy Agent'}
+                  </Button>
+                </>
+              )}
             </div>
           ) : (
             <Button onClick={() => setOpen(false)}>

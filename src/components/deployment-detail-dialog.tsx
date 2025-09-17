@@ -38,16 +38,28 @@ interface Deployment {
 interface DeploymentDetailDialogProps {
     deployment: Deployment;
     children?: React.ReactNode;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    // Legacy props for backward compatibility
     isOpen?: boolean;
     onClose?: () => void;
 }
 
-export function DeploymentDetailDialog({ deployment, children, isOpen: externalOpen, onClose }: DeploymentDetailDialogProps) {
+export function DeploymentDetailDialog({ 
+  deployment, 
+  children, 
+  open: externalOpen, 
+  onOpenChange: externalOnOpenChange,
+  // Legacy props
+  isOpen: legacyIsOpen, 
+  onClose: legacyOnClose 
+}: DeploymentDetailDialogProps) {
   const [internalOpen, setInternalOpen] = useState(false);
   const { toast } = useToast();
 
-  const isOpen = externalOpen ?? internalOpen;
-  const setIsOpen = onClose ?? setInternalOpen;
+  // Prioritize new props over legacy props
+  const isOpen = externalOpen !== undefined ? externalOpen : (legacyIsOpen ?? internalOpen);
+  const setIsOpen = externalOnOpenChange || (legacyOnClose ? (open: boolean) => !open && legacyOnClose() : setInternalOpen);
   
   // Add safety checks for deployment data
   if (!deployment || !deployment.agent) {
@@ -602,17 +614,17 @@ console.log('Agent reply:', data.result);`;
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       {children && <DialogTrigger asChild>{children}</DialogTrigger>}
-      <DialogContent>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto mx-4 sm:mx-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Icon className="h-5 w-5" />
-            {platform} Integration
+          <DialogTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="truncate">{platform} Integration</span>
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-sm">
             Use the details below to integrate the "{agentName}" agent.
           </DialogDescription>
         </DialogHeader>
-        <div className="py-4">
+        <div className="py-4 space-y-4">
             {getIntegrationDetails()}
         </div>
       </DialogContent>

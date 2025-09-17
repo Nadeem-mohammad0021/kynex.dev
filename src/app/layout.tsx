@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { TutorialProvider } from '@/components/tutorial/tutorial-provider';
 import { WelcomeDialog } from '@/components/tutorial/welcome-dialog';
 import { inter, spaceGrotesk, sourceCodePro } from './fonts';
+import { Analytics } from '@vercel/analytics/next';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -90,6 +91,7 @@ export default function RootLayout({
         </ThemeProvider>
         <Toaster />
         <SonnerToaster />
+        <Analytics />
       </body>
     </html>
   );

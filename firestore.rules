@@ -1,0 +1,37 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function to check ownership of a workflow
+    function isWorkflowOwner(workflowId) {
+      return get(/databases/$(database)/documents/workflows/$(workflowId)).data.userId == request.auth.uid;
+    }
+
+    // Users can only read and write to their own user document.
+    // They can create their own user document upon signup.
+    match /users/{userId} {
+      allow read, update: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Workflows are user-specific.
+    match /workflows/{workflowId} {
+      allow read, update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null;
+    }
+    
+    // Agents are linked to workflows, so we check workflow ownership.
+    // This assumes an 'agent' document has a 'workflowId' field.
+    match /agents/{agentId} {
+      allow read, update, delete: if request.auth != null && isWorkflowOwner(resource.data.workflowId);
+      allow create: if request.auth != null;
+    }
+
+    // Default deny all other access for safety.
+    // Any collections not explicitly matched above will be denied.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

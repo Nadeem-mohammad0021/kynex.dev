@@ -1,0 +1,30 @@
+# Supabase project configuration
+# See https://supabase.com/docs/guides/cli/config
+
+project_id = "ai-agent-flow"
+org_id = "" # To find your org_id, run `npx supabase a organizations list`
+
+[api]
+# port = 54321 # Port to use for the API URL
+# schemas = ["public", "storage", "graphql"] # Schemas to expose in the API
+# extra_schemas = [] # Schemas to expose in the API that are not in the main schemas
+max_rows = 1000
+
+[db]
+# port = 5432 # Port to use for the local database
+# major_version = 15 # Major version of Postgres to use
+shadow_db_days = 0 # Number of days to keep shadow databases alive
+
+[studio]
+# port = 54323 # Port to use for Supabase Studio
+
+# Email testing
+# See https://supabase.com/docs/guides/auth/auth-email-testing
+[inbucket]
+# port = 54324 # Port to use for the email testing server
+# smtp_port = 54325
+# pop3_port = 54326
+
+[functions]
+# entrypoint_path = "supabase/functions" # Path to your Supabase functions
+# import_map = "supabase/functions/import_map.json" # Path to your import_map.json file

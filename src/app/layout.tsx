@@ -29,14 +29,13 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/images/logo.png', sizes: '16x16 32x32', type: 'image/png' },
-      { url: '/images/logo.png', sizes: '192x192', type: 'image/png' },
-      { url: '/images/logo.png', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.ico', sizes: '16x16 32x32', type: 'image/x-icon' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/favicon-512x512.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      { url: '/images/logo.png', sizes: '180x180', type: 'image/png' },
-      { url: '/images/logo.png', sizes: '152x152', type: 'image/png' },
-      { url: '/images/logo.png', sizes: '120x120', type: 'image/png' },
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
     shortcut: '/favicon.ico',
   },
@@ -48,7 +47,7 @@ export const metadata: Metadata = {
     siteName: 'KYNEX.dev',
     images: [
       {
-        url: '/images/logo.png',
+        url: '/favicon-512x512.png',
         width: 1200,
         height: 630,
         alt: 'KYNEX.dev - AI Agent Development Platform',
@@ -61,7 +60,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'KYNEX.dev - AI Agent Development Platform',
     description: 'Create and deploy AI agents with ease using KYNEX.dev - The ultimate platform for AI agent development.',
-    images: ['/images/logo.png'],
+    images: ['/favicon-512x512.png'],
   },
 };
 

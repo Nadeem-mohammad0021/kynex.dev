@@ -6,4 +6,4 @@ Allow: /
 Host: https://kynex.dev/
 
 # Sitemaps
-Sitemap: https://kynex.dev/sitemap.xml
+Sitemap: https://kynex.dev/sitemap-0.xml

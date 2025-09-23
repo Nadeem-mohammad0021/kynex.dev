@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url><loc>https://kynex.dev/debug-auth</loc><lastmod>2025-09-23T11:10:01.961Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/auth/redirect</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/auth/auth-code-error</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/clear-auth</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/terms</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/privacy</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/auth/token-handler</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/help</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/settings</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/workflows/editor</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/agents</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/my-agents</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/workflows</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/docs</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/subscription</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/my-account</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/contact-us</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/deployments</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://kynex.dev/dashboard</loc><lastmod>2025-09-23T11:10:01.963Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+</urlset>

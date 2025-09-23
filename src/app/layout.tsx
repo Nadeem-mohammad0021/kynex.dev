@@ -5,7 +5,6 @@ import { Toaster as SonnerToaster } from 'sonner';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 import { TutorialProvider } from '@/components/tutorial/tutorial-provider';
-import { WelcomeDialog } from '@/components/tutorial/welcome-dialog';
 import { inter, spaceGrotesk, sourceCodePro } from './fonts';
 import { Analytics } from '@vercel/analytics/next';
 
@@ -86,7 +85,6 @@ export default function RootLayout({
         >
           <TutorialProvider>
             {children}
-            <WelcomeDialog />
           </TutorialProvider>
         </ThemeProvider>
         <Toaster />

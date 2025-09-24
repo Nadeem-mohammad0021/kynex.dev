@@ -30,6 +30,15 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "KYNEX Help Center | Build AI Agents",
+  description:
+    "Find tutorials, FAQs, and resources to get started with KYNEX.dev. Learn how to create, deploy, and manage AI agents efficiently.",
+};
+
+
 interface Tutorial {
   id: string;
   title: string;

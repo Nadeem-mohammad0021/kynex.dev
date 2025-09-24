@@ -14,6 +14,15 @@ import type { User } from '@supabase/supabase-js';
 import { STRIPE_PRICES } from '@/lib/stripe';
 import { useSearchParams } from 'next/navigation';
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "KYNEX Pricing & Subscription Plans",
+  description:
+    "Choose from free, pro, or enterprise plans to build, deploy, and scale AI agents with KYNEX.dev. Find the perfect plan for your needs.",
+};
+
+
 const plans = [
   {
     name: 'Free Trial',

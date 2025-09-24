@@ -58,6 +58,15 @@ import {
   FileText as FileIcon
 } from 'lucide-react';
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'KYNEX Documentation | Build, Deploy & Manage AI Agents',
+  description:
+    'Official KYNEX.dev documentation. Learn how to build, deploy, and manage AI agents with step-by-step tutorials, workflows, and integrations.',
+};
+
+
 export default function DocsPage() {
   const [activeSection, setActiveSection] = useState('getting-started');
 

@@ -24,15 +24,6 @@ const contactFormSchema = z.object({
 
 type ContactFormData = z.infer<typeof contactFormSchema>;
 
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Contact KYNEX.dev | Support & Partnerships",
-  description:
-    "Get in touch with the KYNEX.dev team for support, technical inquiries, or partnership opportunities. We're here to help.",
-};
-
-
 export default function ContactUsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');

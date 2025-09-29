@@ -594,7 +594,7 @@ function AgentWorkflowEditor() {
                  padding: '10px',
                  borderRadius: '5px',
                  fontSize: '12px',
-                 zIndex: 1000,
+                 zIndex: 10,
                  pointerEvents: 'none'
                }}>
                  <div>Nodes: {nodes.length}</div>

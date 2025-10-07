@@ -7,6 +7,7 @@ import { TutorialProvider } from "@/components/tutorial/tutorial-provider";
 import { inter, spaceGrotesk, sourceCodePro } from "./fonts";
 import { Analytics } from "@vercel/analytics/next";
 import { headers } from "next/headers";
+import SchemaMarkup from "@/components/SchemaMarkup";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -202,19 +203,8 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://use.typekit.net/your-kit-id.css" />
         
                 {/* ✅ Structured Data for Logo / Organization */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "KYNEX.dev",
-              "url": "https://kynex.dev",
-              "logo": "https://kynex.dev/favicon-512x512.png"
-            }),
-          }}
-        />
-        
+        <SchemaMarkup />
+
       </head>
       <body
         className={`${inter.variable} ${spaceGrotesk.variable} ${sourceCodePro.variable} font-body antialiased`}

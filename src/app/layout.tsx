@@ -18,7 +18,8 @@ export const viewport: Viewport = {
 
 // Dynamic metadata for all pages
 export async function generateMetadata(): Promise<Metadata> {
-  const path = headers().get("x-invoke-path") || "";
+  const hdrs = await headers();
+  const path = hdrs.get("x-invoke-path") || "";
 
   if (path.startsWith("/docs")) {
     return {
@@ -199,6 +200,21 @@ export default function RootLayout({
       <head>
         {/* Adobe Fonts - Replace 'your-kit-id' with your actual Adobe Fonts project ID */}
         <link rel="stylesheet" href="https://use.typekit.net/your-kit-id.css" />
+        
+                {/* ✅ Structured Data for Logo / Organization */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "KYNEX.dev",
+              "url": "https://kynex.dev",
+              "logo": "https://kynex.dev/favicon-512x512.png"
+            }),
+          }}
+        />
+        
       </head>
       <body
         className={`${inter.variable} ${spaceGrotesk.variable} ${sourceCodePro.variable} font-body antialiased`}

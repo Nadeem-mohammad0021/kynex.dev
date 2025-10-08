@@ -1,7 +1,4 @@
-"use client";
-
-import Head from "next/head";
-
+// ✅ Server component version — no "use client"
 export default function SchemaMarkup() {
   const schemaData = {
     "@context": "https://schema.org",
@@ -12,11 +9,9 @@ export default function SchemaMarkup() {
   };
 
   return (
-    <Head>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
-      />
-    </Head>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+    />
   );
 }

@@ -17,133 +17,7 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-// Dynamic metadata for all pages
-export async function generateMetadata(): Promise<Metadata> {
-  const hdrs = await headers();
-  const path = hdrs.get("x-invoke-path") || "";
-
-  if (path.startsWith("/docs")) {
-    return {
-      title: "KYNEX Documentation | Build, Deploy & Manage AI Agents",
-      description:
-        "Official KYNEX.dev documentation. Learn how to build, deploy, and manage AI agents with step-by-step tutorials, workflows, and integrations.",
-      openGraph: {
-        title: "KYNEX Documentation | KYNEX.dev",
-        description:
-          "Learn how to create, deploy, and manage AI agents with KYNEX.dev’s official documentation.",
-        url: "https://kynex.dev/docs",
-        siteName: "KYNEX.dev",
-        images: [
-          {
-            url: "/favicon-512x512.png",
-            width: 1200,
-            height: 630,
-            alt: "KYNEX Documentation",
-          },
-        ],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: "KYNEX Documentation | KYNEX.dev",
-        description:
-          "Step-by-step guides and tutorials to help you build and manage AI agents with KYNEX.dev.",
-        images: ["/favicon-512x512.png"],
-      },
-    };
-  }
-
-  if (path.startsWith("/help")) {
-    return {
-      title: "KYNEX Help Center | Tutorials, FAQs & Resources",
-      description:
-        "Find tutorials, FAQs, and resources to get started with KYNEX.dev. Learn how to create, deploy, and manage AI agents efficiently.",
-      openGraph: {
-        title: "KYNEX Help Center | KYNEX.dev",
-        description:
-          "Get support, tutorials, and answers to FAQs about building and managing AI agents.",
-        url: "https://kynex.dev/help",
-        siteName: "KYNEX.dev",
-        images: [
-          {
-            url: "/favicon-512x512.png",
-            width: 1200,
-            height: 630,
-            alt: "KYNEX Help Center",
-          },
-        ],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: "KYNEX Help Center | KYNEX.dev",
-        description:
-          "Resources, FAQs, and support guides for AI agents on KYNEX.dev.",
-        images: ["/favicon-512x512.png"],
-      },
-    };
-  }
-
-  if (path.startsWith("/subscription")) {
-    return {
-      title: "KYNEX Pricing & Subscription Plans",
-      description:
-        "Choose from free, pro, or enterprise plans to build, deploy, and scale AI agents with KYNEX.dev. Find the perfect plan for your needs.",
-      openGraph: {
-        title: "KYNEX Pricing & Subscription Plans",
-        description:
-          "Flexible pricing for individuals, startups, and enterprises building AI agents.",
-        url: "https://kynex.dev/subscription",
-        siteName: "KYNEX.dev",
-        images: [
-          {
-            url: "/favicon-512x512.png",
-            width: 1200,
-            height: 630,
-            alt: "KYNEX Pricing",
-          },
-        ],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: "KYNEX Pricing & Subscription Plans",
-        description:
-          "Compare KYNEX.dev pricing plans and choose the one that fits your AI automation needs.",
-        images: ["/favicon-512x512.png"],
-      },
-    };
-  }
-
-  if (path.startsWith("/contact-us")) {
-    return {
-      title: "Contact KYNEX.dev | Support & Partnerships",
-      description:
-        "Get in touch with the KYNEX.dev team for support, technical inquiries, or partnership opportunities. We're here to help.",
-      openGraph: {
-        title: "Contact KYNEX.dev | Support & Partnerships",
-        description:
-          "Reach out to KYNEX.dev for technical support, collaborations, or partnership opportunities.",
-        url: "https://kynex.dev/contact-us",
-        siteName: "KYNEX.dev",
-        images: [
-          {
-            url: "/favicon-512x512.png",
-            width: 1200,
-            height: 630,
-            alt: "Contact KYNEX.dev",
-          },
-        ],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: "Contact KYNEX.dev",
-        description:
-          "Connect with the KYNEX.dev team for support, questions, or collaborations.",
-        images: ["/favicon-512x512.png"],
-      },
-    };
-  }
-
-  // Default = main site (keep your existing metadata and icons here)
-  return {
+  export const metadata: Metadata = {
     title: "KYNEX.dev - AI Agent Development Platform",
     description:
       "Create and deploy AI agents with ease using KYNEX.dev - The ultimate platform for AI agent development. Build powerful AI workflows with our intuitive visual editor.",
@@ -191,7 +65,6 @@ export async function generateMetadata(): Promise<Metadata> {
       images: ["/favicon-512x512.png"],
     },
   };
-}
 
 export default function RootLayout({
   children,

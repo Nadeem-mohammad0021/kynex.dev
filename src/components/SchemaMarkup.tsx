@@ -9,8 +9,6 @@ export default function SchemaMarkup() {
       logo: "https://kynex.dev/favicon-512x512.png",
       sameAs: [
         "https://www.linkedin.com/company/kynex-dev/",
-        "https://x.com/kynex_dev",
-        "https://github.com/kynex-dev"
       ],
       contactPoint: {
         "@type": "ContactPoint",

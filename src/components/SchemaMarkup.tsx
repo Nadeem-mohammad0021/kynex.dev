@@ -29,22 +29,6 @@ export default function SchemaMarkup() {
         "query-input": "required name=search_term_string"
       }
     },
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      name: "KYNEX.dev - AI Agent Development Platform",
-      operatingSystem: "Web",
-      applicationCategory: "DeveloperApplication",
-      url: "https://kynex.dev",
-      logo: "https://kynex.dev/favicon-512x512.png",
-      description:
-        "Create and deploy AI agents with ease using KYNEX.dev - the ultimate AI agent development platform.",
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "5",
-        ratingCount: "100"
-      }
-    }
   ];
 
   return (

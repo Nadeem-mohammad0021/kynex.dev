@@ -74,6 +74,8 @@ export default function RootLayout({
       <head>
         {/* Adobe Fonts - Replace 'your-kit-id' with your actual Adobe Fonts project ID */}
         <link rel="stylesheet" href="https://use.typekit.net/your-kit-id.css" />
+
+        <link rel="canonical" href="https://kynex.dev/" /> 
         
                 {/* ✅ Structured Data for Logo / Organization */}
         <SchemaMarkup />

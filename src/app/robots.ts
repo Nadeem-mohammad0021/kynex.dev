@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://kynex.dev/sitemap.xml",
-    host: "https://kynex.dev",
+    sitemap: "https://agent.kynex.dev/sitemap.xml",
+    host: "https://agent.kynex.dev",
   };
 }

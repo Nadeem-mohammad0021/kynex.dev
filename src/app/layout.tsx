@@ -44,11 +44,11 @@ export const viewport: Viewport = {
       title: "KYNEX.dev - AI Agent Development Platform",
       description:
         "Create and deploy AI agents with ease using KYNEX.dev - The ultimate platform for AI agent development.",
-      url: "https://kynex.dev",
+      url: "https://agent.kynex.dev",
       siteName: "KYNEX.dev",
       images: [
         {
-          url: "https://kynex.dev/favicon-512x512.png",
+          url: "https://agent.kynex.dev/favicon-512x512.png",
           width: 1200,
           height: 630,
           alt: "KYNEX.dev - AI Agent Development Platform",
@@ -62,7 +62,7 @@ export const viewport: Viewport = {
       title: "KYNEX.dev - AI Agent Development Platform",
       description:
         "Create and deploy AI agents with ease using KYNEX.dev - The ultimate platform for AI agent development.",
-      images: ["https://kynex.dev/favicon-512x512.png"],
+      images: ["https://agent.kynex.dev/favicon-512x512.png"],
     },
   };
 
@@ -75,7 +75,7 @@ export default function RootLayout({
         {/* Adobe Fonts - Replace 'your-kit-id' with your actual Adobe Fonts project ID */}
         <link rel="stylesheet" href="https://use.typekit.net/your-kit-id.css" />
 
-        <link rel="canonical" href="https://kynex.dev/" /> 
+        <link rel="canonical" href="https://agent.kynex.dev/" /> 
         
                 {/* ✅ Structured Data for Logo / Organization */}
         <SchemaMarkup />

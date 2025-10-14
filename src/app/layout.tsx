@@ -48,7 +48,7 @@ export const viewport: Viewport = {
       siteName: "KYNEX.dev",
       images: [
         {
-          url: "https://agent.kynex.dev/logo.png",
+          url: "/logo.png",
           width: 1200,
           height: 630,
           alt: "KYNEX.dev - AI Agent Development Platform",
@@ -62,7 +62,7 @@ export const viewport: Viewport = {
       title: "KYNEX.dev - AI Agent Development Platform",
       description:
         "Create and deploy AI agents with ease using KYNEX.dev - The ultimate platform for AI agent development.",
-      images: ["https://agent.kynex.dev/logo.png"],
+      images: ['/logo.png'],
     },
   };
 
